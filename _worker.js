@@ -1,120 +1,195 @@
 export default {
   async fetch(request, env) {
-    // 1. SÉCURITÉ DES DOMAINES (CORS Strict)
+    const url = new URL(request.url);
+
+    // =========================
+    // CORS STRICT
+    // =========================
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
-          // Remplacement de "*" par ton domaine officiel pour bloquer les autres sites
           "Access-Control-Allow-Origin": "https://sdsprotech.com",
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization, Signature, Signature-Input, Content-Digest",
+          "Access-Control-Allow-Headers":
+            "Content-Type, Authorization, Signature, Content-Digest",
         },
       });
     }
 
-    const url = new URL(request.url);
-
-    // Route de test (API Health)
+    // =========================
+    // HEALTH CHECK
+    // =========================
     if (request.method === "GET" && url.pathname === "/pawapay/health") {
-      return new Response(JSON.stringify({ status: "ok", message: "API Tanor Pay sécurisée et en ligne" }), {
-        headers: { "Content-Type": "application/json" },
-      });
+      return new Response(
+        JSON.stringify({ status: "ok", service: "tanor_pay" }),
+        { headers: { "Content-Type": "application/json" } }
+      );
     }
 
-    // 2. INTERCEPTION ET SÉCURISATION DES WEBHOOKS PAWAPAY
-    if (request.method === "POST" && url.pathname.startsWith("/pawapay/")) {
+    // =========================
+    // ROUTES WHITELIST
+    // =========================
+    const routes = ["/pawapay/callback", "/pawapay/refund"];
 
-      // LE VIGILE ACTIVÉ : Vérification stricte
-      const isAuthentic = await verifyPawaPayRequest(request, env);
-      if (!isAuthentic) {
-        // Blocage immédiat si la signature est absente
-        return new Response(JSON.stringify({ error: "Accès refusé : Signature non valide ou absente" }), { status: 401 });
+    if (request.method === "POST" && routes.includes(url.pathname)) {
+      const rawBody = await request.text();
+
+      const ok = await verifySignature(request, env, rawBody);
+      if (!ok) {
+        console.error("[SECURITY] invalid signature");
+        return new Response("unauthorized", { status: 401 });
       }
 
-      // Si le vigile valide (c'est bien PawaPay), on traite l'opération
-      if (url.pathname === "/pawapay/callback") {
-        return handleCallback(request, env, "deposit");
-      }
-      if (url.pathname === "/pawapay/refund") {
-        return handleCallback(request, env, "refund");
-      }
+      const type = url.pathname.includes("refund") ? "refund" : "deposit";
+
+      return handleCallback(rawBody, env, type);
     }
 
-    // Si la route n'existe pas
-    return new Response(JSON.stringify({ error: "Route non trouvée" }), { status: 404 });
+    return new Response("not found", { status: 404 });
   },
 };
 
-// ==========================================
-// FONCTION DE VÉRIFICATION (LE VIGILE ACTIF)
-// ==========================================
-async function verifyPawaPayRequest(request, env) {
-  // Récupération des en-têtes de sécurité envoyés par PawaPay
-  const signature = request.headers.get("Signature");
-  const contentDigest = request.headers.get("Content-Digest");
+// =========================
+// SIGNATURE + ANTI REPLAY
+// =========================
+async function verifySignature(request, env, rawBody) {
+  const secret = env.PAWAPAY_WEBHOOK_SECRET;
+  const signatureHeader = request.headers.get("Signature");
 
-  // BLOCAGE ACTIVÉ : Si PawaPay n'envoie pas ses signatures, on rejette impitoyablement.
-  if (!signature || !contentDigest) {
-    console.warn("Alerte Sécurité : Tentative d'accès sans signatures PawaPay !");
-    return false; // <-- Cette ligne bloque les fausses requêtes
+  if (!secret || !signatureHeader) return false;
+
+  let timestamp;
+  let providedSig = signatureHeader;
+
+  // format: t=xxx,v1=yyy
+  if (signatureHeader.includes("t=") && signatureHeader.includes("v1=")) {
+    const t = signatureHeader.match(/t=(\d+)/)?.[1];
+    const v1 = signatureHeader.match(/v1=([a-f0-9]+)/i)?.[1];
+
+    if (!t || !v1) return false;
+
+    timestamp = Number(t);
+    providedSig = v1;
+
+    // anti replay 5 min
+    if (Date.now() - timestamp > 5 * 60 * 1000) {
+      console.warn("[SECURITY] replay attack blocked");
+      return false;
+    }
   }
 
-  // PRÉPARATION POUR LE SECRET WEBHOOK (Optionnel mais recommandé)
-  // Le jour où tu configures un token secret dans PawaPay, tu pourras décommenter ceci :
-  /*
-  const webhookSecret = env.PAWAPAY_WEBHOOK_SECRET;
-  const providedToken = request.headers.get("Authorization");
-  if (webhookSecret && providedToken !== `Bearer ${webhookSecret}`) {
-    console.warn("Alerte Sécurité : Mauvais token d'autorisation !");
-    return false;
-  }
-  */
+  const enc = new TextEncoder();
 
-  return true; 
+  const key = await crypto.subtle.importKey(
+    "raw",
+    enc.encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  const sigBuf = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    enc.encode(rawBody)
+  );
+
+  const expected = [...new Uint8Array(sigBuf)]
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+
+  return timingSafeEqual(expected, providedSig);
 }
 
-// ==========================================
-// FONCTION DE TRAITEMENT (ENREGISTREMENT SUPABASE)
-// ==========================================
-async function handleCallback(request, env, type) {
-  const SUPABASE_URL = "https://fvfkawxwtsziqzibzbxt.supabase.co";
-  const SUPABASE_KEY = env.SUPABASE_KEY; // La clé reste toujours invisible !
+// =========================
+// TIMING SAFE COMPARE
+// =========================
+function timingSafeEqual(a, b) {
+  if (a.length !== b.length) return false;
+  let res = 0;
+  for (let i = 0; i < a.length; i++) {
+    res |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return res === 0;
+}
 
-  let body;
-  try {
-    // IMPORTANT : Utilisation de request.clone() pour lire le contenu en toute sécurité
-    body = await request.clone().json();
-  } catch (e) {
-    return new Response(JSON.stringify({ error: "Format JSON invalide" }), { status: 400 });
+// =========================
+// CALLBACK HANDLER
+// =========================
+async function handleCallback(rawBody, env, type) {
+  const SUPABASE_URL = env.SUPABASE_URL;
+  const SUPABASE_KEY = env.SUPABASE_KEY;
+
+  const body = JSON.parse(rawBody);
+
+  const pawapayId = body.depositId || body.refundId;
+  if (!pawapayId) {
+    return new Response("missing id", { status: 400 });
   }
 
+  // =========================
+  // ID EMPOTENCE CHECK (DB)
+  // =========================
+  const exists = await fetch(
+    `${SUPABASE_URL}/rest/v1/pawapay_payments?pawapay_id=eq.${pawapayId}`,
+    {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+      },
+    }
+  );
+
+  const already = await exists.json();
+
+  if (already.length > 0) {
+    return new Response(
+      JSON.stringify({ ok: true, status: "duplicate_ignored" }),
+      { status: 200 }
+    );
+  }
+
+  // =========================
+  // INSERT PAYMENT
+  // =========================
   const payment = {
-    pawapay_id: body.depositId || body.refundId || null,
-    type: type,
+    pawapay_id: pawapayId,
+    type,
     status: body.status || "UNKNOWN",
-    amount: body.amount ? parseFloat(body.amount) : null,
+    amount: body.amount ? Number(body.amount) : null,
     currency: body.currency || "XOF",
-    phone: body.payer?.address?.value || body.payee?.address?.value || null,
+    phone:
+      body?.payer?.address?.value ||
+      body?.payee?.address?.value ||
+      null,
     operator: body.correspondent || null,
-    description: body.statementDescription || null,
-    raw: JSON.stringify(body),
+    raw: rawBody,
     created_at: new Date().toISOString(),
   };
 
-  const res = await fetch(`${SUPABASE_URL}/rest/v1/pawapay_payments`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": SUPABASE_KEY,
-      "Authorization": `Bearer ${SUPABASE_KEY}`,
-      "Prefer": "return=minimal",
-    },
-    body: JSON.stringify(payment),
-  });
+  const res = await fetch(
+    `${SUPABASE_URL}/rest/v1/pawapay_payments`,
+    {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify(payment),
+    }
+  );
 
   if (!res.ok) {
-    return new Response(JSON.stringify({ error: "Erreur d'enregistrement dans la base de données" }), { status: 500 });
+    return new Response(
+      JSON.stringify({ error: "db error" }),
+      { status: 500 }
+    );
   }
 
-  return new Response(JSON.stringify({ received: true }), { status: 200 });
+  return new Response(
+    JSON.stringify({ ok: true }),
+    { status: 200 }
+  );
 }
