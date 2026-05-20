@@ -1,37 +1,37 @@
 export default {
   async fetch(request, env) {
-    // 1. Sécurité des domaines (CORS)
-    // Pour l'instant on laisse "*", mais en production tu le remplaceras par "https://sdsprotech.com"
+    // 1. SÉCURITÉ DES DOMAINES (CORS Strict)
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
-          "Access-Control-Allow-Origin": "*",
+          // Remplacement de "*" par ton domaine officiel pour bloquer les autres sites
+          "Access-Control-Allow-Origin": "https://sdsprotech.com",
           "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-          // On ajoute les en-têtes spécifiques à PawaPay ici
           "Access-Control-Allow-Headers": "Content-Type, Authorization, Signature, Signature-Input, Content-Digest",
         },
       });
     }
-    
+
     const url = new URL(request.url);
-    
+
     // Route de test (API Health)
     if (request.method === "GET" && url.pathname === "/pawapay/health") {
-      return new Response(JSON.stringify({ status: "ok" }), {
+      return new Response(JSON.stringify({ status: "ok", message: "API Tanor Pay sécurisée et en ligne" }), {
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // 2. Interception et Sécurisation des Webhooks (Callbacks)
+    // 2. INTERCEPTION ET SÉCURISATION DES WEBHOOKS PAWAPAY
     if (request.method === "POST" && url.pathname.startsWith("/pawapay/")) {
-      
-      // Le "vigile" à l'entrée : on vérifie que c'est bien PawaPay qui parle
+
+      // LE VIGILE ACTIVÉ : Vérification stricte
       const isAuthentic = await verifyPawaPayRequest(request, env);
       if (!isAuthentic) {
-        return new Response(JSON.stringify({ error: "Accès refusé : Signature invalide" }), { status: 401 });
+        // Blocage immédiat si la signature est absente
+        return new Response(JSON.stringify({ error: "Accès refusé : Signature non valide ou absente" }), { status: 401 });
       }
 
-      // Si le vigile valide, on traite l'opération vers Supabase
+      // Si le vigile valide (c'est bien PawaPay), on traite l'opération
       if (url.pathname === "/pawapay/callback") {
         return handleCallback(request, env, "deposit");
       }
@@ -39,54 +39,55 @@ export default {
         return handleCallback(request, env, "refund");
       }
     }
-    
-    return new Response(null, { status: 404 });
+
+    // Si la route n'existe pas
+    return new Response(JSON.stringify({ error: "Route non trouvée" }), { status: 404 });
   },
 };
 
 // ==========================================
-// FONCTION DE VÉRIFICATION (LE VIGILE)
+// FONCTION DE VÉRIFICATION (LE VIGILE ACTIF)
 // ==========================================
 async function verifyPawaPayRequest(request, env) {
-  // PawaPay envoie ces en-têtes cachés pour prouver son identité
+  // Récupération des en-têtes de sécurité envoyés par PawaPay
   const signature = request.headers.get("Signature");
   const contentDigest = request.headers.get("Content-Digest");
 
-  // ÉTAPE DE PRODUCTION :
-  // Quand ton compte PawaPay sera configuré en mode "Signed Requests", 
-  // tu enlèveras les "//" devant "return false;" pour bloquer ceux qui n'ont pas de signature.
+  // BLOCAGE ACTIVÉ : Si PawaPay n'envoie pas ses signatures, on rejette impitoyablement.
   if (!signature || !contentDigest) {
-    console.warn("Alerte: Tentative d'accès sans les signatures cryptographiques PawaPay !");
-    // return false; 
+    console.warn("Alerte Sécurité : Tentative d'accès sans signatures PawaPay !");
+    return false; // <-- Cette ligne bloque les fausses requêtes
   }
 
-  // ÉTAPE DE SÉCURITÉ SUPPLÉMENTAIRE (Facultative mais recommandée) :
-  // Tu peux définir un PAWAPAY_WEBHOOK_SECRET dans Cloudflare et vérifier qu'il est présent.
-  // const webhookSecret = env.PAWAPAY_WEBHOOK_SECRET;
-  // const providedToken = request.headers.get("Authorization");
-  // if (webhookSecret && providedToken !== `Bearer ${webhookSecret}`) {
-  //   return false;
-  // }
+  // PRÉPARATION POUR LE SECRET WEBHOOK (Optionnel mais recommandé)
+  // Le jour où tu configures un token secret dans PawaPay, tu pourras décommenter ceci :
+  /*
+  const webhookSecret = env.PAWAPAY_WEBHOOK_SECRET;
+  const providedToken = request.headers.get("Authorization");
+  if (webhookSecret && providedToken !== `Bearer ${webhookSecret}`) {
+    console.warn("Alerte Sécurité : Mauvais token d'autorisation !");
+    return false;
+  }
+  */
 
-  return true; // Pour tes tests actuels, on laisse passer.
+  return true; 
 }
 
 // ==========================================
-// FONCTION DE TRAITEMENT (SUPABASE)
+// FONCTION DE TRAITEMENT (ENREGISTREMENT SUPABASE)
 // ==========================================
 async function handleCallback(request, env, type) {
   const SUPABASE_URL = "https://fvfkawxwtsziqzibzbxt.supabase.co";
-  const SUPABASE_KEY = env.SUPABASE_KEY; 
-  
+  const SUPABASE_KEY = env.SUPABASE_KEY; // La clé reste toujours invisible !
+
   let body;
   try {
-    // IMPORTANT : On utilise request.clone() pour copier le message.
-    // Cela évite un bug si la fonction de vérification plus haut a déjà lu le texte.
+    // IMPORTANT : Utilisation de request.clone() pour lire le contenu en toute sécurité
     body = await request.clone().json();
   } catch (e) {
     return new Response(JSON.stringify({ error: "Format JSON invalide" }), { status: 400 });
   }
-  
+
   const payment = {
     pawapay_id: body.depositId || body.refundId || null,
     type: type,
@@ -99,7 +100,7 @@ async function handleCallback(request, env, type) {
     raw: JSON.stringify(body),
     created_at: new Date().toISOString(),
   };
-  
+
   const res = await fetch(`${SUPABASE_URL}/rest/v1/pawapay_payments`, {
     method: "POST",
     headers: {
@@ -110,10 +111,10 @@ async function handleCallback(request, env, type) {
     },
     body: JSON.stringify(payment),
   });
-  
+
   if (!res.ok) {
     return new Response(JSON.stringify({ error: "Erreur d'enregistrement dans la base de données" }), { status: 500 });
   }
-  
+
   return new Response(JSON.stringify({ received: true }), { status: 200 });
 }
