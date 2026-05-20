@@ -27,7 +27,7 @@ export default {
 
 async function handleCallback(request, type) {
   const SUPABASE_URL = "https://fvfkawxwtsziqzibzbxt.supabase.co";
-  const SUPABASE_KEY = "sb_secret_8xBV3ziTUfssKovh1bm-iQ_Y4oLtlW6";
+  const SUPABASE_KEY = "env.SUPABASE_KEY";
   let body;
   try {
     body = await request.json();
