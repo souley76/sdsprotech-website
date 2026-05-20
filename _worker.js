@@ -1,6 +1,5 @@
 export default {
   async fetch(request, env) {
-
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
@@ -10,38 +9,37 @@ export default {
         },
       });
     }
-
+    
     const url = new URL(request.url);
-
+    
     if (request.method === "POST" && url.pathname === "/pawapay/callback") {
       return handleCallback(request, env, "deposit");
     }
-
     if (request.method === "POST" && url.pathname === "/pawapay/refund") {
       return handleCallback(request, env, "refund");
     }
-
     if (request.method === "GET" && url.pathname === "/pawapay/health") {
       return new Response(JSON.stringify({ status: "ok" }), {
         headers: { "Content-Type": "application/json" },
       });
     }
-
+    
     return new Response(null, { status: 404 });
   },
 };
 
 async function handleCallback(request, env, type) {
   const SUPABASE_URL = "https://fvfkawxwtsziqzibzbxt.supabase.co";
-  const SUPABASE_KEY = env.SUPABASE_KEY;
-
+  // On récupère la clé de manière sécurisée depuis Cloudflare
+  const SUPABASE_KEY = env.SUPABASE_KEY; 
+  
   let body;
   try {
     body = await request.json();
   } catch (e) {
     return new Response(JSON.stringify({ error: "Invalid JSON" }), { status: 400 });
   }
-
+  
   const payment = {
     pawapay_id: body.depositId || body.refundId || null,
     type: type,
@@ -54,7 +52,7 @@ async function handleCallback(request, env, type) {
     raw: JSON.stringify(body),
     created_at: new Date().toISOString(),
   };
-
+  
   const res = await fetch(`${SUPABASE_URL}/rest/v1/pawapay_payments`, {
     method: "POST",
     headers: {
@@ -65,10 +63,10 @@ async function handleCallback(request, env, type) {
     },
     body: JSON.stringify(payment),
   });
-
+  
   if (!res.ok) {
     return new Response(JSON.stringify({ error: "DB error" }), { status: 500 });
   }
-
+  
   return new Response(JSON.stringify({ received: true }), { status: 200 });
 }
