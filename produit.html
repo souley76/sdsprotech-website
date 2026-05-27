@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title id="pageTitle">Produit — SDS PRO</title>
+  <meta name="description" id="pageDesc" content="Achetez sur SDS PRO — livraison Dakar">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Rajdhani:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <style>
+
+:root{
+  --black:#000;--deep:#020912;--dark:#040f1e;--mid:#071828;
+  --blue:#0055ff;--cyan:#00c8ff;--glow:#00e5ff;
+  --white:#fff;--grey:#7a9abb;--light:#bdd4ea;
+  --border:rgba(0,180,255,0.22);
+  --wave:#1a73e8;--om:#ff6b00;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--deep);color:var(--white);font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none;}
+
+/* CUSTOM CURSOR */
+.cursor{position:fixed;width:12px;height:12px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:99999;transform:translate(-50%,-50%);transition:transform 0.1s;mix-blend-mode:screen;}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(0,229,255,0.5);border-radius:50%;pointer-events:none;z-index:99998;transform:translate(-50%,-50%);transition:all 0.15s ease;}
+
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
+#intro canvas{position:absolute;inset:0;}
+.intro-content{position:relative;z-index:2;text-align:center;}
+.intro-logo{width:130px;filter:drop-shadow(0 0 50px rgba(0,229,255,1));animation:logoBeat 1.5s ease-in-out infinite;}
+@keyframes logoBeat{0%,100%{filter:drop-shadow(0 0 30px rgba(0,200,255,0.7));}50%{filter:drop-shadow(0 0 80px rgba(0,229,255,1)) drop-shadow(0 0 120px rgba(0,100,255,0.5));}}
+.intro-name{font-family:'Rajdhani',sans-serif;font-size:clamp(20px,4.5vw,44px);font-weight:700;letter-spacing:8px;text-transform:uppercase;margin-top:20px;animation:nameIn 1.2s ease 0.8s both;}
+@keyframes nameIn{from{opacity:0;letter-spacing:24px;}to{opacity:1;letter-spacing:8px;}}
+.intro-name .c{color:var(--cyan);}
+.intro-sub{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:4px;color:var(--light);text-transform:uppercase;margin-top:8px;animation:fadeUp 1s ease 1.4s both;}
+.intro-loader{margin-top:36px;animation:fadeUp 0.5s ease 2s both;}
+.loader-bar{width:min(320px,75vw);height:1px;background:rgba(255,255,255,0.08);position:relative;overflow:hidden;}
+.loader-bar::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--glow));width:0;animation:load 7s ease 2.2s forwards;box-shadow:0 0 12px var(--cyan);}
+@keyframes load{to{width:100%;}}
+.loader-pct{font-family:'DM Mono',monospace;font-size:10px;color:var(--cyan);letter-spacing:3px;margin-top:10px;text-align:right;}
+.intro-exit{animation:iOut 0.6s ease forwards;}
+@keyframes iOut{to{opacity:0;transform:scale(1.04);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+
+/* MAIN */
+#main{opacity:0;transition:opacity 0.8s ease;}
+#main.on{opacity:1;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:rgba(2,9,18,0.85);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
+.nav-strip{background:linear-gradient(90deg,var(--blue),var(--cyan));height:2px;}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 48px;}
+.nav-logo img{height:38px;filter:drop-shadow(0 0 12px rgba(0,200,255,0.4));}
+.nav-links{display:flex;gap:28px;align-items:center;}
+.nav-links a{color:var(--grey);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.5px;transition:color 0.2s;position:relative;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-cta{background:linear-gradient(135deg,var(--blue),var(--cyan))!important;color:#fff!important;padding:9px 22px;border-radius:6px;font-weight:600!important;box-shadow:0 0 20px rgba(0,150,255,0.3);}
+
+
+.pdmo{display:none;position:fixed;inset:0;z-index:850;background:rgba(0,0,0,0.95);align-items:flex-start;justify-content:center;padding:12px;overflow-y:auto;}
+.pdmo.on{display:flex;}
+.pdbox{background:rgba(4,14,28,0.98);border:1px solid rgba(0,200,255,0.2);border-radius:20px;width:100%;max-width:560px;margin:auto;position:relative;animation:mIn 0.3s ease;box-shadow:0 40px 80px rgba(0,0,0,0.9);}
+.pd-gallery{position:relative;background:#000;border-radius:20px 20px 0 0;overflow:hidden;height:300px;}
+.pd-slides{display:flex;transition:transform 0.35s ease;height:100%;}
+.pd-slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,40,100,0.8),rgba(0,10,30,0.9));}
+.pd-slide .ph{font-size:110px;filter:drop-shadow(0 0 40px rgba(0,200,255,0.5));}
+.pd-slide.vid-slide{cursor:pointer;background:linear-gradient(135deg,#000,#001040);}
+.pd-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:10;transition:background 0.2s;border:none;}
+.pd-nav:hover{background:rgba(0,150,255,0.4);}
+.pd-prev{left:10px;position:absolute;top:50%;transform:translateY(-50%);}
+.pd-next{right:10px;position:absolute;top:50%;transform:translateY(-50%);}
+.pd-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
+.pd-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.2s;}
+.pd-dot.on{background:var(--cyan);width:20px;border-radius:4px;}
+.pd-counter{position:absolute;top:12px;right:14px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.5);padding:3px 8px;border-radius:20px;z-index:10;}
+.pd-close{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;position:absolute;top:12px;left:12px;z-index:20;transition:background 0.2s;}
+.pd-close:hover{background:rgba(255,0,0,0.3);}
+.pd-body{padding:20px;}
+.pd-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px;}
+.pd-info h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;color:#fff;line-height:1.1;}
+.pd-info .pd-model{font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);letter-spacing:2px;margin-top:5px;}
+.pd-price-big{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,0.3);white-space:nowrap;text-align:right;}
+.pd-price-big small{font-size:11px;color:var(--grey);display:block;}
+.pd-specs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.pd-desc{font-size:14px;color:var(--light);line-height:1.8;margin-bottom:20px;padding:14px;background:rgba(0,100,255,0.04);border:1px solid var(--border);border-radius:10px;}
+.pd-actions{display:flex;gap:10px;}
+.pd-btn-cmd{flex:1;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;border:none;padding:16px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,100,255,0.4);transition:transform 0.2s;}
+.pd-btn-cmd:hover{transform:translateY(-2px);}
+.pd-btn-wa{background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;padding:16px 18px;border-radius:10px;font-size:22px;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.pd-btn-wa:hover{background:rgba(37,211,102,0.2);}
+.vid-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.vid-play{width:66px;height:66px;background:rgba(0,200,255,0.15);border:2px solid var(--cyan);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.vid-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);}
+
+/* ── CART & AUTH ─────────────────────────────────────────────*/
+.nav-actions{display:flex;align-items:center;gap:8px;}
+.nav-icon-btn{position:relative;background:rgba(0,200,255,0.07);border:1px solid var(--border);color:var(--white);width:38px;height:38px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all 0.2s;}
+.nav-icon-btn:hover{background:rgba(0,200,255,0.15);border-color:var(--cyan);}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--cyan);color:#000;font-size:9px;font-weight:700;min-width:17px;height:17px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.nav-user-btn{background:rgba(0,200,255,0.07);border:1px solid var(--border);color:var(--light);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:all 0.2s;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;}
+.nav-user-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+
+.mo{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.92);backdrop-filter:blur(16px);align-items:center;justify-content:center;padding:20px;}
+.mo.on{display:flex;}
+.modal{background:rgba(4,14,28,0.95);border:1px solid rgba(0,200,255,0.2);border-radius:20px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:mIn 0.3s ease;box-shadow:0 40px 80px rgba(0,0,0,0.9),0 0 80px rgba(0,100,255,0.08);position:relative;}
+.modal::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);}
+@keyframes mIn{from{opacity:0;transform:scale(0.92) translateY(20px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.mhdr{padding:24px 24px 0;display:flex;align-items:center;justify-content:space-between;}
+.mtitle{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;letter-spacing:2px;color:var(--cyan);}
+.mclose{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.mclose:hover{background:rgba(255,0,0,0.2);}
+.mprod{margin:16px 24px;background:rgba(0,100,255,0.06);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px;}
+.memi{font-size:36px;}
+.mpname{font-weight:600;font-size:15px;}
+.mpprice{font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--cyan);font-weight:700;}
+.mform{padding:0 24px 24px;}
+.fg{margin-bottom:14px;}
+.fl{display:block;font-size:10px;font-weight:600;color:var(--grey);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;font-family:'DM Mono',monospace;}
+.fi{width:100%;background:rgba(0,100,255,0.05);border:1px solid var(--border);color:#fff;padding:12px 14px;border-radius:9px;font-size:14px;font-family:'Outfit',sans-serif;transition:border-color 0.2s;outline:none;}
+.fi:focus{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(0,200,255,0.08);}
+.ps{display:flex;gap:10px;}
+.po{flex:1;padding:13px 10px;border-radius:9px;border:2px solid var(--border);cursor:pointer;text-align:center;font-size:13px;font-weight:600;transition:all 0.2s;background:rgba(0,100,255,0.03);font-family:'Outfit',sans-serif;}
+.po.on.wv{border-color:var(--wave);background:rgba(26,115,232,0.12);color:#6ab0ff;}
+.po.on.om{border-color:var(--om);background:rgba(255,107,0,0.12);color:#ffb300;}
+.bsub{width:100%;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;border:none;padding:15px;border-radius:9px;font-weight:700;font-size:14px;cursor:pointer;margin-top:6px;transition:transform 0.2s,box-shadow 0.2s;font-family:'Rajdhani',sans-serif;letter-spacing:2px;text-transform:uppercase;box-shadow:0 4px 20px rgba(0,100,255,0.35);}
+.bsub:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,200,255,0.5);}
+.succ{display:none;padding:28px;text-align:center;}
+.succ .chk{font-size:54px;margin-bottom:14px;}
+.succ .chk.animating{
+  display:inline-block;
+  animation:sablierPulse 2s ease-in-out infinite;
+}
+@keyframes sablierPulse{
+  0%,100%{transform:scale(1) rotate(-8deg);filter:drop-shadow(0 0 8px rgba(0,200,255,0.4));}
+  25%{transform:scale(1.12) rotate(0deg);filter:drop-shadow(0 0 20px rgba(0,229,255,0.9));}
+  50%{transform:scale(1.05) rotate(8deg);filter:drop-shadow(0 0 14px rgba(0,200,255,0.6));}
+  75%{transform:scale(1.1) rotate(0deg);filter:drop-shadow(0 0 18px rgba(0,229,255,0.8));}
+}
+/* Barre de progression commande */
+.order-steps{display:flex;flex-direction:column;gap:8px;margin:16px 0;padding:14px 16px;background:rgba(0,100,255,0.04);border:1px solid rgba(0,200,255,0.12);border-radius:12px;text-align:left;}
+.order-step{display:flex;align-items:center;gap:10px;font-size:12px;}
+.order-step .os-icon{font-size:15px;width:22px;text-align:center;flex-shrink:0;}
+.order-step .os-label{flex:1;color:rgba(255,255,255,0.5);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;}
+.order-step.done .os-label{color:rgba(0,229,255,0.9);}
+.order-step.active .os-label{color:#fff;font-weight:600;}
+.order-step .os-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.12);flex-shrink:0;}
+.order-step.done .os-dot{background:rgba(0,229,255,0.8);}
+.order-step.active .os-dot{background:var(--cyan);box-shadow:0 0 8px rgba(0,229,255,0.8);animation:dotPulse 1.2s ease-in-out infinite;}
+@keyframes dotPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.succ h3{font-family:'Rajdhani',sans-serif;font-size:26px;letter-spacing:2px;margin-bottom:8px;color:var(--cyan);}
+.succ p{color:var(--light);font-size:13px;line-height:1.8;}
+
+/* WA */
+.wa{position:fixed;bottom:80px;right:20px;z-index:600;width:52px;height:52px;background:#25d366;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;text-decoration:none;transition:transform 0.2s;animation:waPulse 3s ease infinite;box-shadow:0 4px 20px rgba(37,211,102,0.4);}
+.wa:hover{transform:scale(1.12);}
+.pay-logo-wrap{display:flex;align-items:center;}
+@keyframes waPulse{0%,100%{box-shadow:0 4px 20px rgba(37,211,102,0.4);}50%{box-shadow:0 4px 40px rgba(37,211,102,0.7),0 0 0 8px rgba(37,211,102,0.07);}}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+.legal-ninea-grid{grid-template-columns:1fr!important;}
+.legal-verify-grid{grid-template-columns:1fr!important;}
+.legal-complaints-grid{grid-template-columns:1fr!important;}
+}
+@media(max-width:768px){
+.hero-grid,.hero-scanlines,.hero-vignette{display:none;}
+.pc{backdrop-filter:none;}
+.modal{backdrop-filter:none;}
+nav{backdrop-filter:none;background:rgba(2,9,18,0.98);}
+.hero-phone-glow{display:none;}
+}
+@media(max-width:900px){
+.hero{grid-template-columns:1fr;padding:90px 20px 40px;}
+#hero3d{height:300px;max-width:100%;}
+.hero-right{margin-top:-20px;}
+}
+@media(max-width:768px){
+.nav-inner{padding:10px 16px;}
+.nav-links{display:none;}
+.section{padding:56px 20px;}
+.pay-section{padding:56px 20px;}
+.pgrid{grid-template-columns:repeat(2,1fr);gap:10px;}
+.pc-img{height:145px;font-size:52px;}
+.pc-name{font-size:13px;}
+.pc-price{font-size:18px;}
+.btn-buy{padding:7px 12px;font-size:11px;}
+.foot-top{grid-template-columns:1fr;gap:24px;}
+footer{padding:40px 20px 28px;}
+body{cursor:auto;}
+.cursor,.cursor-ring{display:none;}
+}
+
+/* LOCKED PRODUCT */
+.pc.locked{opacity:0.72;cursor:pointer;}
+.pc.locked .pc-img::after{content:'🔐';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;filter:drop-shadow(0 0 20px rgba(255,160,0,0.8));z-index:3;pointer-events:none;}
+.pc.locked .pc-img{filter:grayscale(0.5) brightness(0.7);}
+.pc.locked .pc-price{color:#888;}
+.pc.locked .btn-buy{opacity:0.4;pointer-events:none;}
+/* NOTIFY MODAL */
+.notify-mo{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,5,15,0.92);backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px;}
+.notify-mo.on{display:flex;}
+.notify-box{background:linear-gradient(145deg,#040f1e,#071828);border:1px solid rgba(255,160,0,0.3);border-radius:20px;padding:32px 28px;width:100%;max-width:420px;position:relative;}
+.notify-icon{font-size:48px;text-align:center;margin-bottom:12px;}
+.notify-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:2px;color:#fff;text-align:center;margin-bottom:6px;}
+.notify-prod{font-family:'DM Mono',monospace;font-size:11px;color:var(--cyan);text-align:center;letter-spacing:2px;margin-bottom:18px;opacity:0.8;}
+.notify-msg{font-size:13px;color:#bdd4ea;line-height:1.6;text-align:center;margin-bottom:22px;padding:14px;background:rgba(255,140,0,0.06);border:1px solid rgba(255,140,0,0.15);border-radius:10px;}
+.notify-err{font-size:11px;color:#ff8080;margin-bottom:10px;display:none;}
+.notify-err.on{display:block;}
+.notify-ok{font-size:12px;color:#00c864;text-align:center;margin-top:12px;display:none;}
+.notify-ok.on{display:block;}
+.step-circle{border-radius:50%;width:36px;height:36px;min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;flex-shrink:0;line-height:1;text-align:center;}
+.step-circle.blue{background:rgba(0,200,255,0.15);border:2px solid var(--cyan);color:var(--cyan);}
+.step-circle.orange{background:rgba(255,140,0,0.15);border:2px solid #ff8c00;color:#ff8c00;}
+
+/* ── DESKTOP LAYOUT ─────────────────────────────────────────── */
+.wrap{max-width:1440px;margin:0 auto;}
+.nav-inner{max-width:1440px;margin:0 auto;}
+.hero{max-width:none;padding:110px max(48px,5vw) 60px;}
+.section{padding:80px max(48px,5vw);}
+.section>.wrap,.section>*{max-width:1440px;margin-left:auto;margin-right:auto;}
+.pay-section{padding:80px max(48px,5vw);}
+.pgrid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));}
+@media(min-width:1400px){
+  .pgrid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));}
+  .hero-title{font-size:96px;}
+}
+@media(min-width:1800px){
+  .pgrid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+}
+
+/* ── BRAND DRAWERS ──────────────────────────────────────────── */
+.brand-drawers{display:flex;flex-direction:column;gap:12px;}
+.bd-brand{border-radius:16px;overflow:hidden;border:1px solid var(--border);transition:border-color 0.3s;}
+.bd-brand.open{border-color:rgba(0,200,255,0.4);}
+
+.bd-header{display:flex;align-items:center;gap:20px;padding:22px 28px;cursor:pointer;background:rgba(7,24,40,0.7);backdrop-filter:blur(12px);transition:background 0.3s;position:relative;overflow:hidden;user-select:none;}
+.bd-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;opacity:0;transition:opacity 0.3s;}
+.bd-brand.open .bd-header::before{opacity:1;}
+.bd-header:hover{background:rgba(0,80,255,0.08);}
+.bd-brand.open .bd-header{background:rgba(0,60,180,0.12);}
+
+.bd-logo-wrap{width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;}
+.bd-logo-wrap::after{content:'';position:absolute;inset:0;background:inherit;opacity:0.12;}
+
+.bd-info{flex:1;min-width:0;}
+.bd-brand-name{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:3px;text-transform:uppercase;line-height:1;}
+.bd-meta{font-family:'DM Mono',monospace;font-size:10px;color:#8ab0cc;letter-spacing:1.5px;margin-top:5px;}
+
+.bd-right{display:flex;align-items:center;gap:16px;flex-shrink:0;}
+.bd-count-pill{background:rgba(0,200,255,0.1);border:1px solid rgba(0,200,255,0.25);border-radius:100px;padding:4px 14px;font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--cyan);}
+.bd-arrow{width:36px;height:36px;border-radius:50%;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--grey);transition:all 0.3s;background:rgba(0,0,0,0.2);}
+.bd-brand.open .bd-arrow{transform:rotate(90deg);border-color:var(--cyan);color:var(--cyan);background:rgba(0,200,255,0.08);}
+
+/* Neon line brand-specific */
+.bd-brand[data-b="apple"]   .bd-header::before{background:linear-gradient(90deg,transparent,#aaa,#fff,#aaa,transparent);}
+.bd-brand[data-b="samsung"] .bd-header::before{background:linear-gradient(90deg,transparent,#1428A0,#4fc3f7,#1428A0,transparent);}
+.bd-brand[data-b="infinix"] .bd-header::before{background:linear-gradient(90deg,transparent,#ff6b00,#ffb347,#ff6b00,transparent);}
+.bd-brand[data-b="tecno"]   .bd-header::before{background:linear-gradient(90deg,transparent,#00b894,#00e5c8,#00b894,transparent);}
+.bd-brand[data-b="huawei"]  .bd-header::before{background:linear-gradient(90deg,transparent,#cf0a2c,#ff4d6a,#cf0a2c,transparent);}
+
+/* Content area */
+.bd-content{max-height:0;overflow:hidden;transition:max-height 0.5s cubic-bezier(0.4,0,0.2,1);background:rgba(4,14,28,0.6);}
+.bd-brand.open .bd-content{max-height:4000px;}
+.bd-inner{padding:20px 28px 28px;}
+
+/* Sub-filter chips inside drawer */
+.bd-sub-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.bd-sfb{padding:5px 16px;border-radius:100px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:rgba(0,100,255,0.04);color:var(--grey);font-family:'Outfit',sans-serif;transition:all 0.2s;}
+.bd-sfb.on,.bd-sfb:hover{background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;border-color:transparent;}
+
+/* Stat bar under logo */
+.bd-stats-row{display:flex;gap:28px;margin-bottom:20px;padding:14px 20px;background:rgba(0,0,0,0.2);border-radius:10px;border:1px solid var(--border);flex-wrap:wrap;}
+.bd-stat{text-align:center;}
+.bd-stat-val{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--cyan);}
+.bd-stat-lbl{font-family:'DM Mono',monospace;font-size:9px;color:var(--grey);letter-spacing:1px;margin-top:2px;}
+
+@media(max-width:600px){
+  .bd-header{padding:16px 18px;gap:12px;}
+  .bd-brand-name{font-size:17px;}
+  .bd-count-pill{display:none;}
+  .bd-stats-row{gap:16px;}
+  .bd-inner{padding:14px 14px 18px;}
+}
+
+/* PRODUCT DETAIL MODAL */
+.pdmo{display:none;position:fixed;inset:0;z-index:850;background:rgba(0,0,0,0.95);align-items:flex-start;justify-content:center;padding:12px;overflow-y:auto;}
+.pdmo.on{display:flex;}
+.pdbox{background:rgba(4,14,28,0.98);border:1px solid rgba(0,200,255,0.2);border-radius:20px;width:100%;max-width:560px;margin:auto;position:relative;animation:mIn 0.3s ease;box-shadow:0 40px 80px rgba(0,0,0,0.9);}
+.pd-gallery{position:relative;background:#000;border-radius:20px 20px 0 0;overflow:hidden;height:300px;}
+.pd-slides{display:flex;transition:transform 0.35s ease;height:100%;}
+.pd-slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(0,40,100,0.8),rgba(0,10,30,0.9));}
+.pd-slide .ph{font-size:110px;filter:drop-shadow(0 0 40px rgba(0,200,255,0.5));}
+.pd-slide.vid-slide{cursor:pointer;background:linear-gradient(135deg,#000,#001040);}
+.pd-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.12);color:#fff;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;z-index:10;transition:background 0.2s;border:none;}
+.pd-nav:hover{background:rgba(0,150,255,0.4);}
+.pd-prev{left:10px;position:absolute;top:50%;transform:translateY(-50%);}
+.pd-next{right:10px;position:absolute;top:50%;transform:translateY(-50%);}
+.pd-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:10;}
+.pd-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.2s;}
+.pd-dot.on{background:var(--cyan);width:20px;border-radius:4px;}
+.pd-counter{position:absolute;top:12px;right:14px;font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.5);padding:3px 8px;border-radius:20px;z-index:10;}
+.pd-close{background:rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.15);color:#fff;width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;position:absolute;top:12px;left:12px;z-index:20;transition:background 0.2s;}
+.pd-close:hover{background:rgba(255,0,0,0.3);}
+.pd-body{padding:20px;}
+.pd-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px;}
+.pd-info h2{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;letter-spacing:1px;color:#fff;line-height:1.1;}
+.pd-info .pd-model{font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);letter-spacing:2px;margin-top:5px;}
+.pd-price-big{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--cyan);text-shadow:0 0 20px rgba(0,229,255,0.3);white-space:nowrap;text-align:right;}
+.pd-price-big small{font-size:11px;color:var(--grey);display:block;}
+.pd-specs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.pd-desc{font-size:14px;color:var(--light);line-height:1.8;margin-bottom:20px;padding:14px;background:rgba(0,100,255,0.04);border:1px solid var(--border);border-radius:10px;}
+.pd-actions{display:flex;gap:10px;}
+.pd-btn-cmd{flex:1;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;border:none;padding:16px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:2px;cursor:pointer;box-shadow:0 4px 20px rgba(0,100,255,0.4);transition:transform 0.2s;}
+.pd-btn-cmd:hover{transform:translateY(-2px);}
+.pd-btn-wa{background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;padding:16px 18px;border-radius:10px;font-size:22px;cursor:pointer;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.pd-btn-wa:hover{background:rgba(37,211,102,0.2);}
+.vid-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.vid-play{width:66px;height:66px;background:rgba(0,200,255,0.15);border:2px solid var(--cyan);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:10px;}
+.vid-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--cyan);}
+
+/* ── CART & AUTH ─────────────────────────────────────────────*/
+.nav-actions{display:flex;align-items:center;gap:8px;}
+.nav-icon-btn{position:relative;background:rgba(0,200,255,0.07);border:1px solid var(--border);color:var(--white);width:38px;height:38px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all 0.2s;}
+.nav-icon-btn:hover{background:rgba(0,200,255,0.15);border-color:var(--cyan);}
+.cart-badge{position:absolute;top:-6px;right:-6px;background:var(--cyan);color:#000;font-size:9px;font-weight:700;min-width:17px;height:17px;border-radius:10px;display:flex;align-items:center;justify-content:center;padding:0 3px;}
+.nav-user-btn{background:rgba(0,200,255,0.07);border:1px solid var(--border);color:var(--light);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:all 0.2s;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;}
+.nav-user-btn:hover{border-color:var(--cyan);color:var(--cyan);}
+
+/* ── Lecteur vidéo produit ── */
+.prod-video-wrap{position:relative;width:100%;background:#000;border-radius:14px;overflow:hidden;margin-bottom:18px;aspect-ratio:16/9;display:none;}
+.prod-video-wrap.has-video{display:block;}
+.prod-video-wrap video{width:100%;height:100%;object-fit:contain;display:block;}
+
+/* ── Page produit layout ── */
+.prod-page{min-height:100vh;background:var(--deep);padding-top:70px;}
+.prod-container{max-width:900px;margin:0 auto;padding:24px 16px 60px;}
+.prod-back{display:inline-flex;align-items:center;gap:8px;color:var(--cyan);font-size:13px;font-family:'DM Mono',monospace;letter-spacing:1px;text-decoration:none;margin-bottom:24px;opacity:0.8;transition:opacity 0.2s;}
+.prod-back:hover{opacity:1;}
+.prod-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;}
+@media(max-width:640px){.prod-grid{grid-template-columns:1fr;}}
+
+/* Gallery */
+.pg-gallery{position:relative;background:#000;border-radius:20px;overflow:hidden;aspect-ratio:1/1;}
+.pg-slides{display:flex;height:100%;transition:transform 0.35s ease;}
+.pg-slide{min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#000;}
+.pg-slide img{width:100%;height:100%;object-fit:contain;padding:16px;}
+.pg-slide.vid-slide{cursor:pointer;background:linear-gradient(135deg,#000,#001040);}
+.pg-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.6);border:1px solid rgba(0,200,255,0.3);color:#fff;width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;z-index:2;}
+.pg-nav:hover{background:rgba(0,200,255,0.2);}
+.pg-prev{left:10px;} .pg-next{right:10px;}
+.pg-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
+.pg-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.3);cursor:pointer;transition:all 0.3s;}
+.pg-dot.on{width:20px;background:var(--cyan);}
+.pg-counter{position:absolute;top:10px;right:12px;font-size:11px;font-family:'DM Mono',monospace;color:rgba(255,255,255,0.6);background:rgba(0,0,0,0.5);padding:3px 8px;border-radius:10px;}
+
+/* Info section */
+.pg-info{}
+.pg-badge{display:inline-block;font-size:10px;font-family:'DM Mono',monospace;letter-spacing:2px;padding:3px 10px;border-radius:4px;margin-bottom:12px;background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.3);}
+.pg-name{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;line-height:1.1;margin-bottom:6px;}
+.pg-model{font-size:14px;color:var(--grey);margin-bottom:16px;}
+.pg-price{font-size:38px;font-weight:800;color:var(--cyan);letter-spacing:-1px;margin-bottom:4px;}
+.pg-price-label{font-size:12px;color:var(--grey);margin-bottom:20px;}
+.pg-specs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+.pg-spec{background:rgba(0,100,255,0.08);border:1px solid rgba(0,200,255,0.15);border-radius:6px;padding:5px 12px;font-size:12px;font-family:'DM Mono',monospace;color:rgba(255,255,255,0.8);}
+.pg-desc{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px;font-size:14px;line-height:1.7;color:rgba(255,255,255,0.75);margin-bottom:24px;}
+.pg-actions{display:flex;flex-direction:column;gap:10px;}
+.pg-btn-primary{background:linear-gradient(135deg,#0044ff,#00aaff);border:none;color:#fff;padding:16px;border-radius:14px;font-size:15px;font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:2px;cursor:pointer;transition:all 0.3s;}
+.pg-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,150,255,0.4);}
+.pg-btn-secondary{background:rgba(255,255,255,0.04);border:1px solid rgba(0,200,255,0.25);color:var(--cyan);padding:14px;border-radius:14px;font-size:14px;font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:2px;cursor:pointer;transition:all 0.2s;}
+.pg-btn-secondary:hover{background:rgba(0,200,255,0.08);}
+.pg-btn-wa{background:#25D366;border:none;color:#fff;padding:12px;border-radius:14px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+
+/* Loading */
+.pg-loading{display:flex;align-items:center;justify-content:center;min-height:60vh;flex-direction:column;gap:16px;}
+.pg-spinner{width:40px;height:40px;border:3px solid rgba(0,200,255,0.2);border-top-color:var(--cyan);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* Not found */
+.pg-notfound{text-align:center;padding:60px 20px;}
+.pg-notfound h2{font-family:'Rajdhani',sans-serif;font-size:28px;color:var(--cyan);margin-bottom:12px;}
+
+/* Share bar */
+.pg-share{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);}
+.pg-share-label{font-size:11px;font-family:'DM Mono',monospace;color:var(--grey);letter-spacing:1px;}
+.pg-share-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#fff;padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer;transition:all 0.2s;}
+.pg-share-btn:hover{background:rgba(0,200,255,0.1);border-color:rgba(0,200,255,0.3);}
+
+/* Swipe */
+.pg-gallery{touch-action:pan-y;}
+  </style>
+</head>
+<body>
+
+<!-- CURSEUR -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curR"></div>
+
+<!-- NAV -->
+<div id="main">
+<nav>
+  <div class="nav-strip"></div>
+  <div class="nav-inner">
+    <a href="/" style="text-decoration:none;">
+      <img src="/logo-sds.png" height="40" alt="SDS"
+        onerror="this.outerHTML='<span style=font-family:Rajdhani,sans-serif;font-size:26px;font-weight:700;letter-spacing:3px;color:#00e5ff;text-shadow:0 0 20px rgba(0,229,255,0.5)>SDS</span>'">
+    </a>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <div class="nav-links">
+        <a href="/">Accueil</a>
+        <a href="/#cat">Catalogue</a>
+        <a href="/#pay">Paiement</a>
+      </div>
+      <div class="nav-actions">
+        <button class="nav-icon-btn" onclick="window.location.href='/panier'" title="Mon panier">
+          🛒
+          <span class="cart-badge" id="cartBadge" style="display:none;">0</span>
+        </button>
+        <button class="nav-user-btn" id="navUserBtn" onclick="navUserClick()">👤 Connexion</button>
+      </div>
+    </div>
+  </div>
+</nav>
+</div>
+
+<!-- PRODUCT PAGE -->
+<div class="prod-page">
+  <div class="prod-container">
+    <a href="/" class="prod-back">← Retour au catalogue</a>
+    
+    <div id="pgLoading" class="pg-loading">
+      <div class="pg-spinner"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--grey);">Chargement du produit...</div>
+    </div>
+    
+    <div id="pgContent" style="display:none;">
+      <div class="prod-grid">
+        <!-- Galerie -->
+        <div>
+          <div class="pg-gallery" id="pgGallery">
+            <div class="pg-slides" id="pgSlides"></div>
+            <button class="pg-nav pg-prev" onclick="pgNav(-1)">&#8249;</button>
+            <button class="pg-nav pg-next" onclick="pgNav(1)">&#8250;</button>
+            <div class="pg-dots" id="pgDots"></div>
+            <div class="pg-counter" id="pgCounter">1 / 1</div>
+          </div>
+        </div>
+        
+        <!-- Info -->
+        <div class="pg-info">
+          <div class="pg-badge" id="pgBadge">NOUVEAU</div>
+          <h1 class="pg-name" id="pgName">-</h1>
+          <div class="pg-model" id="pgModel">-</div>
+          <div class="pg-price" id="pgPrice">-</div>
+          <div class="pg-price-label">FCFA · Livraison Dakar 24-48h</div>
+          <div class="pg-specs" id="pgSpecs"></div>
+          <div class="pg-desc" id="pgDesc"></div>
+          <div class="pg-actions">
+            <button class="pg-btn-primary" onclick="pgCommander()">COMMANDER</button>
+            <button class="pg-btn-secondary" onclick="pgAddToCart()">+ AJOUTER AU PANIER</button>
+            <button class="pg-btn-wa" onclick="pgWhatsApp()">
+              💬 Poser une question sur WhatsApp
+            </button>
+          </div>
+          <div class="pg-share">
+            <span class="pg-share-label">PARTAGER</span>
+            <button class="pg-share-btn" onclick="pgShare('whatsapp')">WhatsApp</button>
+            <button class="pg-share-btn" onclick="pgShare('copy')">📋 Copier</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="pgNotFound" class="pg-notfound" style="display:none;">
+      <h2>Produit introuvable</h2>
+      <p style="color:var(--grey);margin-bottom:20px;">Ce produit n'existe pas ou n'est plus disponible.</p>
+      <a href="/" style="color:var(--cyan);">← Retour au catalogue</a>
+    </div>
+  </div>
+</div>
+
+<!-- COMMAND MODAL (réutilisé depuis index.html) -->
+<div class="mo" id="mo" onclick="mOut(event)">
+  <div class="mbox">
+    <button class="mclose" onclick="mClose()">&#x2715;</button>
+    <div style="padding:20px 24px 8px;font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;color:var(--cyan);">COMMANDER</div>
+
+    <!-- Lecteur vidéo dans modal -->
+    <div class="prod-video-wrap" id="prodVideoWrap">
+      <video id="prodVideo" preload="metadata" playsinline></video>
+      <div class="vid-label">▶ APERÇU PRODUIT</div>
+      <div class="vid-overlay" id="vidOverlay" onclick="vidTogglePlay()">
+        <div class="vid-play-btn">
+          <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+      </div>
+      <div class="vid-controls">
+        <button class="vid-btn" onclick="vidTogglePlay()" id="vidPlayBtn">
+          <svg viewBox="0 0 24 24" id="vidPlayIcon"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <div class="vid-progress" id="vidProgress" onclick="vidSeek(event)">
+          <div class="vid-progress-bar" id="vidProgressBar"></div>
+        </div>
+        <span class="vid-time" id="vidTime">0:00</span>
+        <button class="vid-btn" onclick="vidToggleMute()">
+          <svg viewBox="0 0 24 24" id="vidVolIcon"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mprod" id="mprod">
+      <div class="memi" id="memi">📱</div>
+      <div><div class="mpname" id="mname">-</div><div class="mpprice" id="mprice">-</div></div>
+    </div>
+    <div class="mform" id="mform">
+      <div class="mlabel">NOM COMPLET</div>
+      <input class="minput" id="cn" placeholder="Votre nom et prenom" autocomplete="name">
+      <div class="mlabel">TELEPHONE</div>
+      <input class="minput" id="cp" type="tel" placeholder="7X XXX XX XX" autocomplete="tel">
+      <div class="mlabel">ADRESSE LIVRAISON</div>
+      <input class="minput" id="ca" placeholder="Quartier, rue, Dakar..." autocomplete="street-address">
+      <div class="mlabel">MODE DE PAIEMENT</div>
+      <div class="pay-opts">
+        <div class="popt" id="popt-free" onclick="sp('free')">
+          <span style="background:#00b050;color:#fff;padding:3px 10px;border-radius:6px;font-weight:700;font-size:13px;">Free Money</span>
+        </div>
+        <div class="popt" id="popt-orange" onclick="sp('orange')">
+          <span style="background:#ff6b00;color:#fff;padding:3px 12px;border-radius:6px;font-weight:700;font-size:13px;">🟠 Orange Money</span>
+        </div>
+      </div>
+      <button class="bsub" onclick="sub()">CONFIRMER →</button>
+    </div>
+    <div class="succ" id="succ" style="display:none;">
+      <div class="chk animating" id="succIcon">⏳</div>
+      <h3 id="succTitle">Confirmation en attente</h3>
+      <p style="font-size:12px;color:rgba(0,229,255,0.7);font-family:'DM Mono',monospace;letter-spacing:0.5px;margin-bottom:14px;">⏱ Une confirmation devrait apparaître sous peu</p>
+      <p id="succMsg"></p>
+      <div style="margin-top:16px;padding:14px;background:rgba(0,150,0,0.08);border:1px solid rgba(0,200,100,0.2);border-radius:12px;">
+        <p style="font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:10px;">Vous ne recevez pas la demande de paiement ? Nous pouvons finaliser votre commande rapidement via WhatsApp 👇</p>
+        <a id="whatsappBtn" href="https://wa.me/221770699739" target="_blank"
+           style="display:block;background:#25D366;color:#fff;text-align:center;padding:10px;border-radius:10px;font-weight:700;font-size:13px;text-decoration:none;">
+          💬 Finaliser via WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPA_URL = 'https://fvfkawxwtsziqzibzbxt.supabase.co';
+const SUPA_KEY = 'sb_publishable_BTBvJ0drkx8ZWflBG7IhMA_A_b6h7rI';
+let _supa = null;
+let selP = '', selProd = null;
+let pgCur = 0;
+let _pgAutoplay = null;
+let _currentUser = null;
+
+const FALLBACK_CATALOG = [
+  // ── APPLE ──────────────────────────────────────────────────
+  {id:1, n:'iPhone 16 Pro Max',   m:'256 GB · Titane',  e:'📱',p:'950 000', prix_raw:950000,  b:'Neuf',    bt:'bn', c:'iphone neuf',   br:'APPLE',   s:['256GB','5G','USB-C','Titane'],      imgs:[], vid:null, desc:null, locked:false},
+  {id:2, n:'iPhone 16 Pro',       m:'128 GB · Titane',  e:'📱',p:'820 000', prix_raw:820000,  b:'Neuf',    bt:'bn', c:'iphone neuf',   br:'APPLE',   s:['128GB','5G','USB-C','Camera Ctrl'], imgs:[], vid:null, desc:null, locked:false},
+  {id:3, n:'iPhone 16',           m:'128 GB',           e:'📱',p:'680 000', prix_raw:680000,  b:'Neuf',    bt:'bn', c:'iphone neuf',   br:'APPLE',   s:['128GB','Dynamic Island','USB-C'],   imgs:[], vid:null, desc:null, locked:false},
+  {id:4, n:'iPhone 15 Pro Max',   m:'256 GB · Titane',  e:'📱',p:'750 000', prix_raw:750000,  b:'Stock',   bt:'bs', c:'iphone neuf',   br:'APPLE',   s:['256GB','Titane','ProRes'],          imgs:[], vid:null, desc:null, locked:false},
+  {id:5, n:'iPhone 15 Pro',       m:'128 GB · Titane',  e:'📱',p:'620 000', prix_raw:620000,  b:'Stock',   bt:'bs', c:'iphone neuf',   br:'APPLE',   s:['128GB','Always-On','Titane'],       imgs:[], vid:null, desc:null, locked:false},
+  {id:6, n:'iPhone 15',           m:'128 GB',           e:'📱',p:'490 000', prix_raw:490000,  b:'Stock',   bt:'bs', c:'iphone neuf',   br:'APPLE',   s:['128GB','Dynamic Island','USB-C'],   imgs:[], vid:null, desc:null, locked:false},
+  {id:7, n:'iPhone 14 Pro Max',   m:'256 GB',           e:'📱',p:'420 000', prix_raw:420000,  b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['256GB','Always-On','ProRes'],       imgs:[], vid:null, desc:null, locked:false},
+  {id:8, n:'iPhone 14',           m:'128 GB',           e:'📱',p:'310 000', prix_raw:310000,  b:'Promo',   bt:'bh', c:'iphone recond', br:'APPLE',   s:['128GB','Face ID','5G'],             imgs:[], vid:null, desc:null, locked:false},
+  {id:9, n:'iPhone 13 Pro',       m:'128 GB',           e:'📱',p:'280 000', prix_raw:280000,  b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['128GB','ProMotion','5G'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:10,n:'iPhone 13',           m:'128 GB',           e:'📱',p:'220 000', prix_raw:220000,  b:'Promo',   bt:'bh', c:'iphone recond', br:'APPLE',   s:['128GB','Face ID','5G'],             imgs:[], vid:null, desc:null, locked:false},
+  {id:11,n:'iPhone 12 Pro',       m:'128 GB',           e:'📱',p:'175 000', prix_raw:175000,  b:'Promo',   bt:'bh', c:'iphone recond', br:'APPLE',   s:['128GB','LiDAR','5G'],              imgs:[], vid:null, desc:null, locked:false},
+  {id:12,n:'iPhone 12',           m:'64 GB',            e:'📱',p:'135 000', prix_raw:135000,  b:'Promo',   bt:'bh', c:'iphone recond', br:'APPLE',   s:['64GB','Face ID','5G'],             imgs:[], vid:null, desc:null, locked:false},
+  {id:50,n:'iPhone Air',          m:'128 GB · Sky Blue', e:'📱',p:'600 000', prix_raw:600000,  b:'Nouveau', bt:'bn', c:'iphone neuf',   br:'APPLE',   s:['128GB','A18','USB-C','Sky Blue'],   imgs:[], vid:null, desc:null, locked:false},
+  {id:51,n:'iPhone XR',           m:'64 GB',             e:'📱',p:'95 000',  prix_raw:95000,   b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['64GB','Face ID','LCD'],             imgs:[], vid:null, desc:null, locked:false},
+  {id:52,n:'iPhone XR',           m:'128 GB',            e:'📱',p:'110 000', prix_raw:110000,  b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['128GB','Face ID','LCD'],            imgs:[], vid:null, desc:null, locked:false},
+  {id:53,n:'iPhone XS Max',       m:'64 GB',             e:'📱',p:'120 000', prix_raw:120000,  b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['64GB','Face ID','OLED'],            imgs:[], vid:null, desc:null, locked:false},
+  {id:54,n:'iPhone 11',           m:'64 GB',             e:'📱',p:'145 000', prix_raw:145000,  b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['64GB','Face ID','LCD'],             imgs:[], vid:null, desc:null, locked:false},
+  {id:55,n:'iPhone 11 Pro',       m:'64 GB',             e:'📱',p:'175 000', prix_raw:175000,  b:'Recond.', bt:'bp', c:'iphone recond', br:'APPLE',   s:['64GB','3 cameras','OLED'],          imgs:[], vid:null, desc:null, locked:false},
+  {id:56,n:'iPhone 16 Pro Max',   m:'512 GB · Titane',   e:'📱',p:'1 150 000',prix_raw:1150000,b:'Neuf',   bt:'bn', c:'iphone neuf',   br:'APPLE',   s:['512GB','5G','Camera Ctrl','Titane'],imgs:[], vid:null, desc:null, locked:false},
+  // ── INFINIX ────────────────────────────────────────────────
+  {id:13,n:'Infinix Zero 40 5G',  m:'12 GB · 256 GB',   e:'📱',p:'280 000', prix_raw:280000,  b:'Neuf',    bt:'bn', c:'infinix neuf',  br:'INFINIX', s:['108MP','5G','90W','AMOLED'],       imgs:[], vid:null, desc:null, locked:false},
+  {id:14,n:'Infinix Zero 40',     m:'8 GB · 256 GB',    e:'📱',p:'210 000', prix_raw:210000,  b:'Neuf',    bt:'bn', c:'infinix neuf',  br:'INFINIX', s:['108MP','68W','AMOLED'],            imgs:[], vid:null, desc:null, locked:false},
+  {id:15,n:'Infinix Hot 50 Pro+', m:'8 GB · 128 GB',    e:'📱',p:'175 000', prix_raw:175000,  b:'Neuf',    bt:'bn', c:'infinix neuf',  br:'INFINIX', s:['64MP','5000mAh','90Hz'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:16,n:'Infinix Hot 50',      m:'6 GB · 128 GB',    e:'📱',p:'128 000', prix_raw:128000,  b:'Neuf',    bt:'bn', c:'infinix neuf',  br:'INFINIX', s:['50MP','5000mAh','90Hz'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:17,n:'Infinix Note 40 Pro', m:'12 GB · 256 GB',   e:'📱',p:'215 000', prix_raw:215000,  b:'Stock',   bt:'bs', c:'infinix neuf',  br:'INFINIX', s:['108MP','45W','AMOLED'],            imgs:[], vid:null, desc:null, locked:false},
+  {id:18,n:'Infinix Note 40',     m:'8 GB · 128 GB',    e:'📱',p:'160 000', prix_raw:160000,  b:'Stock',   bt:'bs', c:'infinix neuf',  br:'INFINIX', s:['108MP','NFC','45W'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:19,n:'Infinix Smart 8 Plus',m:'4 GB · 64 GB',     e:'📱',p:'72 000',  prix_raw:72000,   b:'Promo',   bt:'bh', c:'infinix neuf',  br:'INFINIX', s:['50MP','5000mAh'],                  imgs:[], vid:null, desc:null, locked:false},
+  // ── TECNO ──────────────────────────────────────────────────
+  {id:20,n:'Tecno Phantom X2 Pro',m:'12 GB · 256 GB',   e:'📱',p:'420 000', prix_raw:420000,  b:'Neuf',    bt:'bn', c:'tecno neuf',    br:'TECNO',   s:['50MP','5G','AMOLED'],              imgs:[], vid:null, desc:null, locked:false},
+  {id:21,n:'Tecno Phantom X2',    m:'8 GB · 256 GB',    e:'📱',p:'355 000', prix_raw:355000,  b:'Neuf',    bt:'bn', c:'tecno neuf',    br:'TECNO',   s:['50MP','5G','AMOLED'],              imgs:[], vid:null, desc:null, locked:false},
+  {id:22,n:'Tecno Camon 30 Pro',  m:'12 GB · 256 GB',   e:'📱',p:'285 000', prix_raw:285000,  b:'Neuf',    bt:'bn', c:'tecno neuf',    br:'TECNO',   s:['50MP OIS','5G','120Hz'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:23,n:'Tecno Camon 30',      m:'8 GB · 256 GB',    e:'📱',p:'190 000', prix_raw:190000,  b:'Neuf',    bt:'bn', c:'tecno neuf',    br:'TECNO',   s:['50MP','45W','120Hz'],              imgs:[], vid:null, desc:null, locked:false},
+  {id:24,n:'Tecno Spark 30 Pro',  m:'8 GB · 128 GB',    e:'📱',p:'155 000', prix_raw:155000,  b:'Stock',   bt:'bs', c:'tecno neuf',    br:'TECNO',   s:['108MP','18W','5000mAh'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:25,n:'Tecno Spark 30',      m:'6 GB · 128 GB',    e:'📱',p:'115 000', prix_raw:115000,  b:'Stock',   bt:'bs', c:'tecno neuf',    br:'TECNO',   s:['50MP','5000mAh','90Hz'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:26,n:'Tecno Pova 6 Neo',    m:'8 GB · 128 GB',    e:'📱',p:'140 000', prix_raw:140000,  b:'Neuf',    bt:'bn', c:'tecno neuf',    br:'TECNO',   s:['50MP','33W','6000mAh'],            imgs:[], vid:null, desc:null, locked:false},
+  {id:27,n:'Tecno Pop 8',         m:'2 GB · 32 GB',     e:'📱',p:'52 000',  prix_raw:52000,   b:'Promo',   bt:'bh', c:'tecno neuf',    br:'TECNO',   s:['8MP','5000mAh'],                   imgs:[], vid:null, desc:null, locked:false},
+  // ── SAMSUNG ────────────────────────────────────────────────
+  {id:28,n:'Samsung Galaxy S25 Ultra', m:'12 GB · 256 GB',e:'📱',p:'980 000', prix_raw:980000, b:'Neuf',  bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['200MP','S Pen','5G'],              imgs:[], vid:null, desc:null, locked:false},
+  {id:29,n:'Samsung Galaxy S25 Ultra', m:'12 GB · 512 GB',e:'📱',p:'1 120 000',prix_raw:1120000,b:'Neuf', bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['200MP','S Pen','5G','512GB'],      imgs:[], vid:null, desc:null, locked:false},
+  {id:30,n:'Samsung Galaxy S25+', m:'12 GB · 256 GB',   e:'📱',p:'780 000', prix_raw:780000,  b:'Neuf',    bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5G','256GB'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:31,n:'Samsung Galaxy S25',  m:'12 GB · 128 GB',   e:'📱',p:'620 000', prix_raw:620000,  b:'Neuf',    bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5G','128GB'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:32,n:'Samsung Galaxy S24 Ultra',m:'12 GB · 256 GB',e:'📱',p:'850 000', prix_raw:850000, b:'Stock',   bt:'bs', c:'samsung neuf',  br:'SAMSUNG', s:['200MP','S Pen','5G'],              imgs:[], vid:null, desc:null, locked:false},
+  {id:33,n:'Samsung Galaxy S24+', m:'12 GB · 256 GB',   e:'📱',p:'650 000', prix_raw:650000,  b:'Stock',   bt:'bs', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5G','256GB'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:34,n:'Samsung Galaxy S24',  m:'8 GB · 128 GB',    e:'📱',p:'520 000', prix_raw:520000,  b:'Stock',   bt:'bs', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5G','128GB'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:35,n:'Samsung Galaxy A55 5G',m:'8 GB · 128 GB',   e:'📱',p:'320 000', prix_raw:320000,  b:'Neuf',    bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['50MP OIS','5G','128GB'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:36,n:'Samsung Galaxy A55 5G',m:'8 GB · 256 GB',   e:'📱',p:'370 000', prix_raw:370000,  b:'Neuf',    bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['50MP OIS','5G','256GB'],           imgs:[], vid:null, desc:null, locked:false},
+  {id:37,n:'Samsung Galaxy A35 5G',m:'6 GB · 128 GB',   e:'📱',p:'240 000', prix_raw:240000,  b:'Neuf',    bt:'bn', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5G','128GB'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:38,n:'Samsung Galaxy A15 5G',m:'4 GB · 128 GB',   e:'📱',p:'145 000', prix_raw:145000,  b:'Promo',   bt:'bh', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5G','5000mAh'],             imgs:[], vid:null, desc:null, locked:false},
+  {id:39,n:'Samsung Galaxy A05s', m:'4 GB · 64 GB',     e:'📱',p:'85 000',  prix_raw:85000,   b:'Promo',   bt:'bh', c:'samsung neuf',  br:'SAMSUNG', s:['50MP','5000mAh','64GB'],           imgs:[], vid:null, desc:null, locked:false},
+  // ── HUAWEI ─────────────────────────────────────────────────
+  {id:40,n:'Huawei Pura 70 Pro',  m:'12 GB · 256 GB',   e:'📱',p:'880 000', prix_raw:880000,  b:'Neuf',    bt:'bn', c:'huawei neuf',   br:'HUAWEI',  s:['50MP Periscope','Satellite','HarmonyOS'],imgs:[],vid:null,desc:null,locked:false},
+  {id:41,n:'Huawei Pura 70 Pro',  m:'12 GB · 512 GB',   e:'📱',p:'1 020 000',prix_raw:1020000,b:'Neuf',    bt:'bn', c:'huawei neuf',   br:'HUAWEI',  s:['50MP','512GB','Satellite'],         imgs:[], vid:null, desc:null, locked:false},
+  {id:42,n:'Huawei Pura 70',      m:'12 GB · 256 GB',   e:'📱',p:'680 000', prix_raw:680000,  b:'Neuf',    bt:'bn', c:'huawei neuf',   br:'HUAWEI',  s:['50MP','HarmonyOS 4','LTPO'],        imgs:[], vid:null, desc:null, locked:false},
+  {id:43,n:'Huawei Mate 60 Pro',  m:'12 GB · 256 GB',   e:'📱',p:'920 000', prix_raw:920000,  b:'Stock',   bt:'bs', c:'huawei neuf',   br:'HUAWEI',  s:['50MP','Satellite','5G'],            imgs:[], vid:null, desc:null, locked:false},
+  {id:44,n:'Huawei Nova 12 Pro',  m:'8 GB · 256 GB',    e:'📱',p:'450 000', prix_raw:450000,  b:'Neuf',    bt:'bn', c:'huawei neuf',   br:'HUAWEI',  s:['60MP Selfie','OLED','66W'],         imgs:[], vid:null, desc:null, locked:false},
+  {id:45,n:'Huawei Nova 12',      m:'8 GB · 128 GB',    e:'📱',p:'320 000', prix_raw:320000,  b:'Neuf',    bt:'bn', c:'huawei neuf',   br:'HUAWEI',  s:['50MP','OLED','66W'],               imgs:[], vid:null, desc:null, locked:false},
+  {id:46,n:'Huawei Nova 11 Pro',  m:'8 GB · 256 GB',    e:'📱',p:'380 000', prix_raw:380000,  b:'Promo',   bt:'bh', c:'huawei neuf',   br:'HUAWEI',  s:['100W Charge','60MP','OLED'],        imgs:[], vid:null, desc:null, locked:false},
+  {id:47,n:'Huawei Y90',          m:'6 GB · 128 GB',    e:'📱',p:'120 000', prix_raw:120000,  b:'Promo',   bt:'bh', c:'huawei neuf',   br:'HUAWEI',  s:['48MP','6000mAh','128GB'],           imgs:[], vid:null, desc:null, locked:false},
+];
+
+const descs={
+  APPLE:"iPhone reconditionné ou neuf avec garantie. Batterie vérifiée, écran sans défaut. Livré avec chargeur et boîte. Paiement Orange Money ou Free Money. Livraison 24-48h à Dakar.",
+  SAMSUNG:"Samsung Galaxy neuf avec emballage d'origine. Garantie officielle incluse. Double SIM. Livraison rapide à Dakar et environs.",
+  INFINIX:"Infinix neuf en boîte scellée. Excellent rapport qualité-prix. Grande batterie, bonne caméra. Garantie incluse. Livraison 24h à Dakar.",
+  TECNO:"Tecno neuf avec garantie. Conçu pour l'Afrique. Caméra performante, batterie longue durée. Livraison 24-48h.",
+  HUAWEI:"Huawei neuf avec HarmonyOS. Caméra Leica de haute précision. Livraison 24h à Dakar avec garantie officielle."
+};
+
+const BRANDS = [
+  {
+    key:'apple', label:'APPLE iPHONE', sub:'iPhone', filter:'iphone',
+    bg:'linear-gradient(135deg,#1c1c1e,#2c2c2e)', accent:'#d0d0d0',
+    logo:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 34" width="28" height="34"><path fill="white" fill-rule="evenodd" d="M19.27 8.36C20.6 6.84 21.5 4.78 21.27 2.7c-1.82.08-4.02 1.2-5.33 2.72-1.17 1.35-2.19 3.48-1.92 5.52 2.03.16 4.1-.99 5.25-2.58zM21.3 9.38c-2.9-.17-5.38 1.65-6.76 1.65-1.38 0-3.5-1.56-5.78-1.52-2.97.04-5.72 1.73-7.23 4.4-3.09 5.36-.8 13.31 2.2 17.68 1.47 2.14 3.23 4.53 5.54 4.44 2.2-.09 3.04-1.43 5.7-1.43 2.65 0 3.41 1.43 5.73 1.39 2.4-.04 3.91-2.17 5.38-4.32 1.69-2.46 2.38-4.84 2.42-4.97-.05-.02-4.64-1.78-4.69-7.07-.04-4.42 3.62-6.53 3.78-6.63-2.07-3.04-5.27-3.38-6.29-3.42z"/></svg>`,
+    subs:['Tous','Neufs','Reconditionnés','iPhone Air','iPhone 16','iPhone 15','iPhone 14','iPhone 13','iPhone 12','iPhone 11','iPhone XR']
+  },
+  {
+    key:'samsung', label:'SAMSUNG GALAXY', sub:'Samsung', filter:'samsung',
+    bg:'linear-gradient(135deg,#060f3a,#0a1a6e)', accent:'#4fc3f7',
+    logo:`<svg viewBox="0 0 200 200" width="40" height="40"><ellipse cx="100" cy="100" rx="96" ry="60" fill="none" stroke="white" stroke-width="8"/><text x="100" y="107" font-family="Arial,sans-serif" font-size="32" font-weight="700" fill="white" text-anchor="middle" letter-spacing="-1">SAMSUNG</text></svg>`,
+    subs:['Tous','Galaxy S25','Galaxy S24','Galaxy A55','Galaxy A35','Galaxy A15','Galaxy A05']
+  },
+  {
+    key:'infinix', label:'INFINIX', sub:'Infinix', filter:'infinix',
+    bg:'linear-gradient(135deg,#1a0800,#3d1500)', accent:'#ff8c42',
+    logo:`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="36" height="36"><defs><linearGradient id="ifxg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#ff8c00"/><stop offset="100%" stop-color="#ff4500"/></linearGradient></defs><rect width="60" height="60" rx="14" fill="url(#ifxg)"/><text x="30" y="42" font-family="Arial Black,sans-serif" font-size="34" font-weight="900" fill="white" text-anchor="middle" font-style="italic">X</text></svg>`,
+    subs:['Tous','Zero 40','Hot 50','Note 40','Smart 8']
+  },
+  {
+    key:'tecno', label:'TECNO', sub:'Tecno', filter:'tecno',
+    bg:'linear-gradient(135deg,#002820,#005040)', accent:'#00e5c8',
+    logo:`<svg viewBox="0 0 200 80" width="52" height="28"><rect width="200" height="80" rx="8" fill="none"/><text x="100" y="57" font-family="Arial Black,sans-serif" font-size="46" font-weight="900" fill="white" text-anchor="middle" letter-spacing="4">TECNO</text></svg>`,
+    subs:['Tous','Phantom X2','Camon 30','Spark 30','Pova 6','Pop 8']
+  },
+  {
+    key:'huawei', label:'HUAWEI', sub:'Huawei', filter:'huawei',
+    bg:'linear-gradient(135deg,#2a0008,#5c0014)', accent:'#ff4d6a',
+    logo:`<svg viewBox="0 0 100 100" width="36" height="36"><g fill="#ff4d6a"><ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(0 50 50)"/><ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(60 50 50)"/><ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(120 50 50)"/><ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(180 50 50)"/><ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(240 50 50)"/><ellipse cx="50" cy="22" rx="8" ry="20" transform="rotate(300 50 50)"/></g></svg>`,
+    subs:['Tous','Pura 70','Mate 60','Nova 12','Nova 11','Y90']
+  }
+];
+
+// ── Charger le produit depuis l'URL ──────────────────────────
+async function loadProduct(){
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const slug = window.location.pathname.split('/').pop();
+  
+  if(!id && !slug){
+    showNotFound(); return;
+  }
+
+  // Chercher d'abord dans Supabase
+  let prod = null;
+  try {
+    const res = await fetch(
+      `${SUPA_URL}/rest/v1/products?id=eq.${id || slug}&visible=eq.true&select=*`,
+      { headers: { 'apikey': SUPA_KEY, 'Authorization': `Bearer ${SUPA_KEY}` } }
+    );
+    const data = await res.json();
+    if(data && data.length > 0){
+      const r = data[0];
+      prod = {
+        id: r.id, n: r.nom, m: r.modele, e: r.emoji || '📱',
+        p: new Intl.NumberFormat('fr-FR').format(r.prix),
+        prix_raw: r.prix, b: r.badge, bt: r.badge_type,
+        c: r.categorie, br: r.marque, s: r.specs ? r.specs.split(',').map(x=>x.trim()) : [],
+        imgs: (() => {
+          const raw = r.images;
+          if(!raw) return [];
+          if(Array.isArray(raw)) return raw;
+          if(typeof raw === 'string'){
+            if(raw.startsWith('{') && raw.endsWith('}'))
+              return raw.slice(1,-1).split(',').map(s=>s.replace(/^"|"$/g,'').trim()).filter(Boolean);
+            try { const p = JSON.parse(raw); return Array.isArray(p) ? p : [raw]; } catch(e){}
+            return raw ? [raw] : [];
+          }
+          return [];
+        })(),
+        vid: r.video_url || null,
+        desc: r.description || null,
+        locked: false
+      };
+    }
+  } catch(e){ console.log('Supabase error:', e.message); }
+
+  // Fallback catalogue local
+  if(!prod && id){
+    prod = FALLBACK_CATALOG.find(p => String(p.id) === String(id));
+  }
+
+  if(!prod){ showNotFound(); return; }
+
+  renderProduct(prod);
+}
+
+function renderProduct(prod){
+  selProd = prod;
+  
+  // Meta
+  document.getElementById('pageTitle').textContent = `${prod.n} ${prod.m} — SDS PRO`;
+  document.getElementById('pageDesc').setAttribute('content', 
+    `Achetez ${prod.n} ${prod.m} à ${prod.p} FCFA. Livraison Dakar 24-48h.`);
+
+  // Info
+  document.getElementById('pgBadge').textContent = prod.b || 'DISPONIBLE';
+  document.getElementById('pgName').textContent = prod.n;
+  document.getElementById('pgModel').textContent = prod.m;
+  document.getElementById('pgPrice').textContent = prod.p;
+  document.getElementById('pgSpecs').innerHTML = (prod.s||[]).map(s=>
+    `<span class="pg-spec">${s}</span>`).join('');
+  document.getElementById('pgDesc').textContent = 
+    prod.desc || (descs[prod.br] || descs.APPLE);
+
+  // Gallery
+  buildGallery(prod);
+
+  // Afficher
+  document.getElementById('pgLoading').style.display = 'none';
+  document.getElementById('pgContent').style.display = 'block';
+  
+  // Autoplay galerie
+  setTimeout(pgStartAutoplay, 800);
+}
+
+function buildGallery(prod){
+  const slides = document.getElementById('pgSlides');
+  const dots = document.getElementById('pgDots');
+  let sHTML = '', dHTML = '';
+  let idx = 0;
+  const imgs = prod.imgs || [];
+
+  // Vidéo en premier
+  if(prod.vid){
+    const isYT = prod.vid.includes('youtube.com') || prod.vid.includes('youtu.be');
+    const ytId = isYT ? prod.vid.replace(/.*(?:v=|youtu\.be\/)([^&]+).*/,'$1') : null;
+    if(ytId){
+      sHTML += `<div class="pg-slide vid-slide" onclick="pgPlayVid()">
+        <div class="vid-overlay">
+          <img src="https://img.youtube.com/vi/${ytId}/maxresdefault.jpg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.5;">
+          <div class="vid-play" style="position:relative;z-index:2;"><svg width="36" height="36" viewBox="0 0 28 28"><polygon points="8,4 24,14 8,24" fill="#00e5ff"/></svg></div>
+          <div class="vid-label" style="position:relative;z-index:2;">▶ VIDEO DU PRODUIT</div>
+        </div>
+      </div>`;
+    } else {
+      sHTML += `<div class="pg-slide vid-slide" style="position:relative;overflow:hidden;" onclick="pgPlayVid()">
+        <video src="${prod.vid}" muted playsinline preload="auto"
+          style="width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;"
+          onloadedmetadata="this.currentTime=0.5;this.play().then(()=>{setTimeout(()=>{this.pause();this.currentTime=0.5;},200)}).catch(()=>{})">
+        </video>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);">
+          <div class="vid-play"><svg width="40" height="40" viewBox="0 0 28 28"><polygon points="8,4 24,14 8,24" fill="#00e5ff"/></svg></div>
+          <div class="vid-label" style="margin-top:10px;">▶ VIDEO DU PRODUIT</div>
+        </div>
+      </div>`;
+    }
+    dHTML += `<div class="pg-dot on" onclick="pgStopAutoplay();pgGoto(0)" style="background:rgba(0,229,255,0.8);">▶</div>`;
+    idx++;
+  }
+
+  // Photos
+  if(imgs.length > 0){
+    imgs.forEach((url, i) => {
+      const dotOn = (!prod.vid && i===0) ? ' on' : '';
+      sHTML += `<div class="pg-slide"><img src="${url}" alt="${prod.n}" 
+        style="width:100%;height:100%;object-fit:contain;padding:16px;"
+        onerror="this.parentElement.innerHTML='<div style=font-size:80px;text-align:center>${prod.e}</div>'"></div>`;
+      dHTML += `<div class="pg-dot${dotOn}" onclick="pgStopAutoplay();pgGoto(${idx})"></div>`;
+      idx++;
+    });
+  } else if(!prod.vid){
+    sHTML += `<div class="pg-slide"><div style="font-size:100px;text-align:center;">${prod.e}</div></div>`;
+    dHTML += `<div class="pg-dot on"></div>`;
+  }
+
+  slides.innerHTML = sHTML;
+  dots.innerHTML = dHTML;
+  pgGoto(0);
+}
+
+// ── Navigation galerie ────────────────────────────────────────
+function pgGoto(n){
+  pgCur = n;
+  const total = document.querySelectorAll('.pg-slide').length;
+  document.getElementById('pgSlides').style.transform = `translateX(-${n*100}%)`;
+  document.querySelectorAll('.pg-dot').forEach((d,i) => d.classList.toggle('on', i===n));
+  document.getElementById('pgCounter').textContent = (n+1)+' / '+total;
+}
+
+function pgNav(dir){
+  const total = document.querySelectorAll('.pg-slide').length;
+  pgStopAutoplay();
+  pgGoto((pgCur + dir + total) % total);
+}
+
+function pgStartAutoplay(){
+  pgStopAutoplay();
+  _pgAutoplay = setInterval(() => {
+    const total = document.querySelectorAll('.pg-slide').length;
+    if(total > 1) pgGoto((pgCur+1) % total);
+  }, 3000);
+}
+
+function pgStopAutoplay(){
+  if(_pgAutoplay){ clearInterval(_pgAutoplay); _pgAutoplay = null; }
+}
+
+// Swipe tactile
+(function(){
+  let _tx = 0, _active = false;
+  document.addEventListener('touchstart', e => {
+    const g = document.getElementById('pgGallery');
+    if(!g || !g.contains(e.target)) return;
+    _tx = e.touches[0].clientX; _active = true;
+  }, {passive:true});
+  document.addEventListener('touchend', e => {
+    if(!_active) return; _active = false;
+    const dx = e.changedTouches[0].clientX - _tx;
+    if(Math.abs(dx) > 45){
+      pgStopAutoplay();
+      const total = document.querySelectorAll('.pg-slide').length;
+      pgGoto((pgCur + (dx<0?1:-1) + total) % total);
+    }
+  }, {passive:true});
+})();
+
+// ── Vidéo plein écran ─────────────────────────────────────────
+function pgPlayVid(){
+  if(!selProd || !selProd.vid) return;
+  const url = selProd.vid;
+  const isYT = url.includes('youtube.com') || url.includes('youtu.be');
+  const mo = document.createElement('div');
+  mo.id = 'vidPlayerMo';
+  mo.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.97);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;';
+  if(isYT){
+    const ytId = url.replace(/.*(?:v=|youtu\.be\/)([^&]+).*/,'$1');
+    mo.innerHTML = `
+      <button onclick="document.getElementById('vidPlayerMo').remove()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;">✕</button>
+      <iframe width="100%" height="260" src="https://www.youtube.com/embed/${ytId}?autoplay=1" frameborder="0" allow="autoplay;fullscreen" style="max-width:500px;border-radius:12px;"></iframe>`;
+  } else {
+    mo.innerHTML = `
+      <button onclick="document.getElementById('vidPlayerMo').remove()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;">✕</button>
+      <video controls autoplay playsinline style="width:100%;max-width:500px;border-radius:14px;background:#000;max-height:70vh;">
+        <source src="${url}" type="video/mp4">
+        <source src="${url}" type="video/quicktime">
+      </video>`;
+  }
+  document.body.appendChild(mo);
+}
+
+// ── Actions produit ───────────────────────────────────────────
+function pgCommander(){
+  if(!selProd) return;
+  // Pré-remplir le modal de commande
+  document.getElementById('memi').textContent = selProd.e;
+  document.getElementById('mname').textContent = selProd.n;
+  document.getElementById('mprice').textContent = selProd.p + ' FCFA';
+  document.getElementById('mform').style.display = 'block';
+  document.getElementById('succ').style.display = 'none';
+  selP = '';
+  document.querySelectorAll('.popt').forEach(p => p.classList.remove('on'));
+  vidInit(selProd.vid || null);
+  document.getElementById('mo').classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+
+function pgAddToCart(){
+  if(!selProd) return;
+  // Ajouter au panier (localStorage)
+  const cart = JSON.parse(localStorage.getItem('sds_cart') || '[]');
+  const existing = cart.find(i => i.id === selProd.id);
+  if(existing){ existing.qty = (existing.qty||1) + 1; }
+  else { cart.push({id:selProd.id, n:selProd.n, p:selProd.prix_raw, e:selProd.e, m:selProd.m, qty:1}); }
+  localStorage.setItem('sds_cart', JSON.stringify(cart));
+  updateCartBadge();
+  // Feedback visuel
+  const btn = event.target;
+  btn.textContent = '✅ Ajouté !';
+  setTimeout(() => btn.textContent = '+ AJOUTER AU PANIER', 2000);
+}
+
+function pgWhatsApp(){
+  if(!selProd) return;
+  const msg = encodeURIComponent(`Bonjour SDS PRO 👋\nJe suis intéressé par :\n• ${selProd.n} ${selProd.m}\n• ${selProd.p} FCFA\n\nPouvez-vous me donner plus d'informations ?`);
+  window.open(`https://wa.me/221770699739?text=${msg}`, '_blank');
+}
+
+function pgShare(type){
+  const url = window.location.href;
+  const text = `${selProd?.n} ${selProd?.m} — ${selProd?.p} FCFA sur SDS PRO`;
+  if(type === 'whatsapp'){
+    window.open(`https://wa.me/?text=${encodeURIComponent(text + '\n' + url)}`, '_blank');
+  } else {
+    navigator.clipboard?.writeText(url).then(() => {
+      const btn = event.target;
+      btn.textContent = '✅ Copié !';
+      setTimeout(() => btn.textContent = '📋 Copier', 2000);
+    });
+  }
+}
+
+function showNotFound(){
+  document.getElementById('pgLoading').style.display = 'none';
+  document.getElementById('pgNotFound').style.display = 'block';
+}
+
+function updateCartBadge(){
+  const cart = JSON.parse(localStorage.getItem('sds_cart') || '[]');
+  const count = cart.reduce((a,i) => a+(i.qty||1), 0);
+  const badge = document.getElementById('cartBadge');
+  if(badge){ badge.textContent = count; badge.style.display = count > 0 ? 'flex' : 'none'; }
+}
+
+function navUserClick(){
+  window.location.href = '/#profil';
+}
+
+// ── Modal commande helpers ─────────────────────────────────────
+function mOut(e){ if(e.target === document.getElementById('mo')) mClose(); }
+function mClose(){
+  document.getElementById('mo').classList.remove('on');
+  document.body.style.overflow = '';
+  vidStop();
+}
+function sp(t){
+  selP = t;
+  document.getElementById('popt-free').classList.toggle('on', t==='free');
+  document.getElementById('popt-orange').classList.toggle('on', t==='orange');
+}
+
+function maskPhone(num){
+  const s = String(num).replace(/\s/g,'');
+  if(s.length <= 7) return s;
+  return s.slice(0,5) + '\u2022\u2022\u2022' + s.slice(-4);
+}
+
+function vidInit(url){
+  const wrap = document.getElementById('prodVideoWrap');
+  const video = document.getElementById('prodVideo');
+  if(!wrap || !video) return;
+  if(!url){ wrap.classList.remove('has-video'); video.src=''; return; }
+  wrap.classList.add('has-video');
+  video.src = url;
+  video.currentTime = 0;
+  video.muted = false;
+  // Events
+  video.ontimeupdate = vidUpdateProgress;
+  video.onended = vidOnEnded;
+  video.onplay = ()=>{
+    document.getElementById('vidOverlay').classList.add('hidden');
+    document.getElementById('vidPlayIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+  };
+  video.onpause = ()=>{
+    document.getElementById('vidOverlay').classList.remove('hidden');
+    document.getElementById('vidPlayIcon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+  };
+}
+
+function vidTogglePlay(){
+  const v = document.getElementById('prodVideo');
+  if(!v) return;
+  v.paused ? v.play() : v.pause();
+}
+
+function vidToggleMute(){
+  const v = document.getElementById('prodVideo');
+  if(!v) return;
+  v.muted = !v.muted;
+  const icon = document.getElementById('vidVolIcon');
+  if(icon) icon.innerHTML = v.muted
+    ? '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>'
+    : '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>';
+}
+
+function vidSeek(e){
+  const v = document.getElementById('prodVideo');
+  const bar = document.getElementById('vidProgress');
+  if(!v || !bar || !v.duration) return;
+  const rect = bar.getBoundingClientRect();
+  const ratio = (e.clientX - rect.left) / rect.width;
+  v.currentTime = ratio * v.duration;
+}
+
+function vidUpdateProgress(){
+  const v = document.getElementById('prodVideo');
+  const bar = document.getElementById('vidProgressBar');
+  const time = document.getElementById('vidTime');
+  if(!v || !bar) return;
+  const pct = v.duration ? (v.currentTime / v.duration * 100) : 0;
+  bar.style.width = pct + '%';
+  if(time){
+    const m = Math.floor(v.currentTime/60);
+    const s = Math.floor(v.currentTime%60).toString().padStart(2,'0');
+    time.textContent = m+':'+s;
+  }
+}
+
+function vidOnEnded(){
+  const v = document.getElementById('prodVideo');
+  if(v){ v.currentTime=0; v.pause(); }
+}
+
+function vidStop(){
+  const v = document.getElementById('prodVideo');
+  if(v){ v.pause(); v.currentTime=0; }
+}
+
+function pdPlayVid(){
+  if(!selProd || !selProd.vid) return;
+  const url = selProd.vid;
+  // Vérifier si YouTube
+  const isYT = url.includes('youtube.com') || url.includes('youtu.be');
+  if(isYT){
+    const ytId = url.replace(/.*(?:v=|youtu\.be\/)([^&]+).*/,'$1');
+    // Créer modal YouTube
+    const mo = document.createElement('div');
+    mo.id = 'vidPlayerMo';
+    mo.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;flex-direction:column;';
+    mo.innerHTML = `
+      <button onclick="document.getElementById('vidPlayerMo').remove()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;">✕</button>
+      <iframe width="100%" height="260" src="https://www.youtube.com/embed/${ytId}?autoplay=1" frameborder="0" allow="autoplay;fullscreen" style="max-width:500px;border-radius:12px;"></iframe>
+    `;
+    document.body.appendChild(mo);
+  } else {
+    // Lecteur vidéo natif intégré
+    const mo = document.createElement('div');
+    mo.id = 'vidPlayerMo';
+    mo.style.cssText = 'position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.97);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:20px;';
+    mo.innerHTML = `
+      <button onclick="document.getElementById('vidPlayerMo').remove()" style="position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;width:40px;height:40px;border-radius:50%;font-size:20px;cursor:pointer;">✕</button>
+      <video controls autoplay playsinline style="width:100%;max-width:500px;border-radius:14px;background:#000;max-height:70vh;">
+        <source src="${url}" type="video/mp4">
+        <source src="${url}" type="video/quicktime">
+        Votre navigateur ne supporte pas ce format vidéo.
+      </video>
+    `;
+    document.body.appendChild(mo);
+  }
+}
+
+async function sub(){
+  const san=s=>s.replace(/[<>&"']/g,'').trim();
+  const n=san(document.getElementById('cn').value);
+  const ph=san(document.getElementById('cp').value);
+  const ad=san(document.getElementById('ca').value);
+  if(!n||!ph||!ad||!selP){alert('Veuillez remplir tous les champs et choisir un mode de paiement.');return;}
+
+  // Formater le numéro de téléphone en format international Sénégal
+  let phone = ph.replace(/\s/g,'');
+  if(phone.startsWith('0')) phone = phone.substring(1);
+  if(!phone.startsWith('+')) phone = '+221' + phone;
+
+  // Correspondant PawaPay selon opérateur choisi
+  const correspondent = selP === 'free' ? 'FREE_MONEY_SN' : 'ORANGE_MONEY_SN';
+
+  // Afficher bouton en chargement
+  const btn = document.querySelector('.bsub');
+  btn.disabled = true;
+  btn.textContent = '⏳ Traitement en cours...';
+
+  try {
+    const res = await fetch('https://polished-sun-7d9d.souleymane76173.workers.dev/pay', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phone:         phone,
+        amount:        selProd.prix_raw,
+        currency:      'XOF',
+        correspondent: correspondent,
+        productName:   selProd.n,
+        clientName:    n,
+        address:       ad
+      })
+    });
+
+    const data = await res.json();
+
+    const pStatus = (data.pawapayStatus || '').toUpperCase();
+    // Statuts positifs — paiement reçu ou en cours de traitement
+    const okStatuses = ['ACCEPTED','COMPLETED','PENDING','PROCESSING','SUBMITTED','INITIATED'];
+    // Statuts négatifs — paiement réellement échoué
+    const failStatuses = ['FAILED','REJECTED','TIMED_OUT','DUPLICATE_IGNORED','EXPIRED'];
+    const isOk = res.ok && data.success !== false && (okStatuses.includes(pStatus) || (!failStatuses.includes(pStatus) && pStatus !== ''));
+
+    if(isOk){
+      // Succès ou en attente — afficher confirmation
+      document.getElementById('mform').style.display='none';
+      document.getElementById('succ').style.display='block';
+      const titre = (pStatus === 'COMPLETED') ? 'Paiement confirmé !' : 'Confirmation en attente';
+      const icone = (pStatus === 'COMPLETED') ? '✅' : '⏳';
+      const succIcon = document.getElementById('succIcon');
+      if(succIcon){
+        succIcon.textContent = icone;
+        pStatus === 'COMPLETED' ? succIcon.classList.remove('animating') : succIcon.classList.add('animating');
+      }
+      const succTitle = document.getElementById('succTitle');
+      if(succTitle) succTitle.textContent = titre;
+      if(pStatus === 'COMPLETED'){
+        const sc = document.getElementById('stepConfirm');
+        const sp = document.getElementById('stepPrep');
+        if(sc){ sc.classList.remove('active'); sc.classList.add('done'); sc.querySelector('.os-icon').textContent='✅'; }
+        if(sp){ sp.classList.add('active'); }
+      }
+      const sousMsg = (pStatus === 'COMPLETED')
+        ? '✅ Votre paiement a été confirmé.<br><br>Votre commande est en préparation.<br><br>Pour toute question : <strong>77 069 97 39</strong>'
+        : 'Une demande de paiement <strong>'+(selP==='free'?'Free Money':'Orange Money')+'</strong> a été envoyée sur le <strong>'+maskPhone(phone)+'</strong>.<br><br>Confirmez le paiement sur votre téléphone.<br><br>Pour toute question : <strong>77 069 97 39</strong>';
+      document.getElementById('succMsg').innerHTML = sousMsg;
+      // Lien WhatsApp avec infos commande
+      const waMsg = encodeURIComponent(`Bonjour SDS PRO 👋\nJe souhaite finaliser ma commande :\n• Produit : ${selProd?.n||'Produit'}\n• Montant : ${selProd?.p||''} FCFA\n• Téléphone : ${phone}\n• Opérateur : ${selP==='free'?'Free Money':'Orange Money'}\nMerci !`);
+      const waBtn = document.getElementById('whatsappBtn');
+      if(waBtn) waBtn.href = `https://wa.me/221770699739?text=${waMsg}`;
+      if(window._clearAbandonedOrder) window._clearAbandonedOrder();
+
+      // Enregistrer commande dans Supabase
+      if(_supa && selProd){
+        try {
+          await _supa.from('orders').insert({
+            user_id:    window._currentUser?.id || null,
+            user_email: window._currentUser?.email || null,
+            user_name:  n,
+            telephone:  phone,
+            phone:      phone,
+            adresse:    ad,
+            address:    ad,
+            produit:    selProd.n,
+            product:    selProd.n,
+            prix:       selProd.prix_raw || 0,
+            paiement:   selP === 'free' ? 'Free Money' : 'Orange Money',
+            status:     pStatus === 'COMPLETED' ? 'en_attente' : 'en_attente',
+            deposit_id: data.depositId || data.raw?.depositId || null,
+          });
+          console.log('Commande enregistrée');
+        } catch(e){ console.log('Erreur save commande:', e.message); }
+      }
+    } else {
+      // Échec réel
+      btn.disabled = false;
+      btn.textContent = 'CONFIRMER →';
+      const rawErr = data.raw?.errorMessage || data.raw?.rejectionReason || data.error || 'Erreur de paiement';
+      let errMsg = typeof rawErr === 'object' ? (rawErr?.rejectionMessage || rawErr?.errorMessage || JSON.stringify(rawErr)) : String(rawErr);
+      // Message plus clair pour l'utilisateur final
+      if(errMsg.includes('Invalid correspondent')) errMsg = 'Service de paiement temporairement indisponible. Contactez-nous au 77 069 97 39.';
+      if(errMsg.includes('Only numbers')) errMsg = 'Numéro de téléphone invalide. Entrez seulement les chiffres (ex: 770699739).';
+      alert('❌ Paiement échoué : ' + errMsg + '\n\nVérifiez votre numéro et réessayez.');
+    }
+
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = 'CONFIRMER →';
+    alert('❌ Erreur de connexion. Vérifiez votre internet et réessayez.');
+    console.error('Erreur paiement:', err);
+  }
+}
+
+// ── Curseur custom ────────────────────────────────────────────
+const cur = document.getElementById('cur'), curR = document.getElementById('curR');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{mx=e.clientX;my=e.clientY;});
+(function loop(){
+  rx+=(mx-rx)*0.18; ry+=(my-ry)*0.18;
+  if(cur){cur.style.left=mx+'px';cur.style.top=my+'px';}
+  if(curR){curR.style.left=rx+'px';curR.style.top=ry+'px';}
+  requestAnimationFrame(loop);
+})();
+
+// ── Init ──────────────────────────────────────────────────────
+updateCartBadge();
+loadProduct();
+</script>
+</body>
+</html>
